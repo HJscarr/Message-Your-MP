@@ -15,8 +15,8 @@ function MailtoButton() {
 
   // Only include the email in the mailto link if it exists
   const mailtoLink = email 
-    ? `mailto:${encodeURIComponent(email)}?body=${encodeURIComponent(body)}`
-    : `mailto:?body=${encodeURIComponent(body)}`;
+    ? `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent('How are you going to deal with Wealth Inequality?')}&body=${encodeURIComponent(body)}`
+    : `mailto:?subject=${encodeURIComponent('How are you going to deal with Wealth Inequality?')}&body=${encodeURIComponent(body)}`;
 
   // Only render if email is ready
   if (!isEmailReady) return null;

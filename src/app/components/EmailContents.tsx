@@ -33,17 +33,30 @@ interface EmailContentsProps {
   mpName: string;
   constituency: string;
   email: string | null;
+  fullName: string;
+  address: string;
+  postcode: string;
 }
 
-export default function EmailContents({ mpName, constituency, email }: EmailContentsProps) {
+export default function EmailContents({ 
+  mpName, 
+  constituency, 
+  email, 
+  fullName,
+  address,
+  postcode 
+}: EmailContentsProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setEmailBody, setIsEmailReady } = useEmail();
   const [showNotification, setShowNotification] = useState(false);
 
-  // Extract first name from full name
-  const firstName = mpName.split(' ')[0];
+  // Format postcode to ensure correct spacing and capitalization
+  const formatPostcode = (postcode: string) => {
+    const cleaned = postcode.replace(/\s+/g, '').toUpperCase();
+    return `${cleaned.slice(0, -3)} ${cleaned.slice(-3)}`;
+  };
 
   // Auto-scroll effect
   useEffect(() => {
@@ -52,7 +65,7 @@ export default function EmailContents({ mpName, constituency, email }: EmailCont
     }
   }, [displayedText]);
 
-  const emailTemplate = `Dear ${firstName},
+  const emailTemplate = `Dear ${mpName},
 
 I would like to enquire as to what your plans are to deal with the exploding wealth inequality in the UK.
 
@@ -64,7 +77,12 @@ Asset prices are soaring due to the wealth explosion of the rich and as I'm sure
 
 As the MP of ${constituency}, I feel it is your duty to raise this point in parliament.
 
-I eagerly await your response.`;
+I eagerly await your response.
+
+Kind regards,
+${fullName}
+
+Address: ${address} ${formatPostcode(postcode)}`;
 
   useEffect(() => {
     let currentIndex = 0;

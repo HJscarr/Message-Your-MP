@@ -7,19 +7,23 @@ import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import Notification from './Notification';
 import GradientButton from './GradientButton';
 import InspiredBy from './InspiredBy';
+import UserInput from './UserInput';
 
 export default function EnterPostcode() {
   const { loading, error, mpDetails, getMPDetails } = useMPDetails();
   const [postcode, setPostcode] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [address, setAddress] = useState('');
   const [showNotification, setShowNotification] = useState(false);
 
   // UK postcode regex pattern
   const postcodePattern = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
   const isValidPostcode = postcodePattern.test(postcode.trim());
+  const isValidForm = fullName.trim() !== '' && address.trim() !== '' && isValidPostcode;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isValidPostcode) {
+    if (isValidForm) {
       getMPDetails(postcode);
     }
   };
@@ -45,24 +49,34 @@ export default function EnterPostcode() {
           </h1>
           <InspiredBy />
           <div className="max-w-sm mx-auto">
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="postcode" className="block text-sm/6 font-medium text-gray-900">
-                Enter your postcode
-              </label>
-              <div className="mt-2">
-                <input
-                  id="postcode"
-                  name="postcode"
-                  type="text"
-                  value={postcode}
-                  onChange={(e) => setPostcode(e.target.value)}
-                  placeholder="e.g. SW1A 1AA"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <UserInput
+                id="fullName"
+                label="Full Name"
+                value={fullName}
+                onChange={setFullName}
+                placeholder="John Smith"
+              />
+              
+              <UserInput
+                id="address"
+                label="House Number and Street"
+                value={address}
+                onChange={setAddress}
+                placeholder="123 Example Street"
+              />
+              
+              <UserInput
+                id="postcode"
+                label="Enter your postcode"
+                value={postcode}
+                onChange={setPostcode}
+                placeholder="e.g. SW1A 1AA"
+              />
+
               <GradientButton
                 type="submit"
-                disabled={loading || !isValidPostcode}
+                disabled={loading || !isValidForm}
                 className="mt-6 w-full justify-center"
               >
                 {loading ? 'Finding MP...' : 'Find my MP'}
@@ -95,6 +109,9 @@ export default function EnterPostcode() {
             mpName={mpDetails.name}
             constituency={mpDetails.constituency}
             email={mpDetails.email}
+            fullName={fullName}
+            address={address}
+            postcode={postcode}
           />
         </>
       )}
