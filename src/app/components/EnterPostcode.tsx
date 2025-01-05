@@ -3,14 +3,29 @@
 import { useState } from 'react';
 import { useMPDetails } from '@/hooks/useFindEmail';
 import EmailContents from './EmailContents';
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import Notification from './Notification';
 
 export default function EnterPostcode() {
   const { loading, error, mpDetails, getMPDetails } = useMPDetails();
   const [postcode, setPostcode] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     getMPDetails(postcode);
+  };
+
+  const handleCopyEmail = async () => {
+    if (mpDetails?.email) {
+      try {
+        await navigator.clipboard.writeText(mpDetails.email);
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 3000);
+      } catch (err) {
+        console.error('Failed to copy email:', err);
+      }
+    }
   };
 
   return (
@@ -46,9 +61,18 @@ export default function EnterPostcode() {
         
         {mpDetails && (
           <>
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <div className="relative mt-4 p-4 bg-gray-50 rounded-lg">
               <h2 className="font-semibold text-gray-900">{mpDetails.name}</h2>
               <p className="mt-1 text-sm text-gray-600">Email: {mpDetails.email || 'Not available'}</p>
+              {mpDetails.email && (
+                <button
+                  onClick={handleCopyEmail}
+                  className="absolute top-2 right-2 p-2 text-gray-500 hover:text-indigo-600 transition-colors"
+                  title="Copy email address"
+                >
+                  <ClipboardDocumentIcon className="h-5 w-5" />
+                </button>
+              )}
             </div>
           </>
         )}
@@ -61,6 +85,11 @@ export default function EnterPostcode() {
           email={mpDetails.email}
         />
       )}
+      <Notification 
+        show={showNotification}
+        setShow={setShowNotification}
+        message="MP's email address copied to clipboard"
+      />
     </div>
   );
 } 

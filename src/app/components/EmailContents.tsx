@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import Notification from './Notification'
 
 // Create a context for the email body
 const EmailContext = createContext<{
@@ -34,6 +35,7 @@ export default function EmailContents({ mpName, constituency, email }: EmailCont
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setEmailBody } = useEmail();
+  const [showNotification, setShowNotification] = useState(false);
 
   // Auto-scroll effect
   useEffect(() => {
@@ -73,6 +75,9 @@ Kind regards,
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(textareaRef.current?.value || '');
+      setShowNotification(true);
+      // Auto-hide notification after 3 seconds
+      setTimeout(() => setShowNotification(false), 3000);
     } catch (err) {
       console.error('Failed to copy text:', err);
     }
@@ -84,21 +89,28 @@ Kind regards,
   };
 
   return (
-    <div className="relative mt-6 bg-white rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
-      <textarea
-        ref={textareaRef}
-        value={isTypingComplete ? displayedText : displayedText + '|'}
-        onChange={handleTextChange}
-        className="w-full h-64 p-4 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-        disabled={!isTypingComplete}
+    <>
+      <div className="relative mt-6 bg-white rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
+        <textarea
+          ref={textareaRef}
+          value={isTypingComplete ? displayedText : displayedText + '|'}
+          onChange={handleTextChange}
+          className="w-full h-64 p-4 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+          disabled={!isTypingComplete}
+        />
+        <button
+          onClick={handleCopy}
+          className="absolute top-2 right-2 p-2 text-gray-500 hover:text-indigo-600 transition-colors"
+          title="Copy to clipboard"
+        >
+          <ClipboardDocumentIcon className="h-5 w-5" />
+        </button>
+      </div>
+      <Notification 
+        show={showNotification}
+        setShow={setShowNotification}
+        message="The message has been copied to your clipboard"
       />
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-2 p-2 text-gray-500 hover:text-indigo-600 transition-colors"
-        title="Copy to clipboard"
-      >
-        <ClipboardDocumentIcon className="h-5 w-5" />
-      </button>
-    </div>
+    </>
   );
 } 
