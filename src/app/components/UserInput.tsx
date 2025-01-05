@@ -1,5 +1,8 @@
 'use client';
 
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+
 interface UserInputProps {
   id: string;
   label: string;
@@ -15,11 +18,27 @@ export default function UserInput({
   onChange, 
   placeholder
 }: UserInputProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <div>
-      <label htmlFor={id} className="block text-sm/6 font-medium text-gray-900">
-        {label}
-      </label>
+      <div className="flex justify-center items-center">
+        <label htmlFor={id} className="text-sm/6 font-medium text-gray-900 flex items-center">
+          {label}
+          <div className="ml-1 inline-flex items-center">
+            <InformationCircleIcon 
+              className="h-4 w-4 text-gray-500 hover:text-indigo-600 cursor-help"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            />
+            {showTooltip && (
+              <div className="absolute mt-1 ml-4 w-64 p-2 bg-gray-700 text-white text-xs rounded-md shadow-lg z-10 pointer-events-none">
+                Required by your MP to prove you are human, we do not store any of your data
+              </div>
+            )}
+          </div>
+        </label>
+      </div>
       <div className="mt-2">
         <input
           id={id}

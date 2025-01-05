@@ -36,6 +36,7 @@ interface EmailContentsProps {
   fullName: string;
   address: string;
   postcode: string;
+  telephone: string;
 }
 
 export default function EmailContents({ 
@@ -44,7 +45,8 @@ export default function EmailContents({
   email, 
   fullName,
   address,
-  postcode 
+  postcode,
+  telephone 
 }: EmailContentsProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -82,7 +84,8 @@ I eagerly await your response.
 Kind regards,
 ${fullName}
 
-Address: ${address} ${formatPostcode(postcode)}`;
+Address: ${address} ${formatPostcode(postcode)}
+Tel: ${telephone}`;
 
   useEffect(() => {
     let currentIndex = 0;

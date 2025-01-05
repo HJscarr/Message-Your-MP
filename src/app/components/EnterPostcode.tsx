@@ -14,12 +14,13 @@ export default function EnterPostcode() {
   const [postcode, setPostcode] = useState('');
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
+  const [telephone, setTelephone] = useState('');
   const [showNotification, setShowNotification] = useState(false);
 
   // UK postcode regex pattern
   const postcodePattern = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
   const isValidPostcode = postcodePattern.test(postcode.trim());
-  const isValidForm = fullName.trim() !== '' && address.trim() !== '' && isValidPostcode;
+  const isValidForm = fullName.trim() !== '' && address.trim() !== '' && isValidPostcode && telephone.trim() !== '';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +45,7 @@ export default function EnterPostcode() {
     <div className="max-w-4xl mx-auto">
       {!mpDetails ? (
         <div className="text-center space-y-8">
-          <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
+          <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl -mt-12">
             Demand your MP take action on Wealth Inequality
           </h1>
           <InspiredBy />
@@ -68,10 +69,18 @@ export default function EnterPostcode() {
               
               <UserInput
                 id="postcode"
-                label="Enter your postcode"
+                label="Postcode"
                 value={postcode}
                 onChange={setPostcode}
                 placeholder="e.g. SW1A 1AA"
+              />
+
+              <UserInput
+                id="telephone"
+                label="Telephone Number"
+                value={telephone}
+                onChange={setTelephone}
+                placeholder="e.g. 07123456789"
               />
 
               <GradientButton
@@ -79,7 +88,7 @@ export default function EnterPostcode() {
                 disabled={loading || !isValidForm}
                 className="mt-6 w-full justify-center"
               >
-                {loading ? 'Finding MP...' : 'Find my MP'}
+                {loading ? 'Finding MP...' : 'Find MP & Generate Email'}
               </GradientButton>
             </form>
           </div>
@@ -88,7 +97,7 @@ export default function EnterPostcode() {
         <>
           <div className="max-w-sm mx-auto space-y-6">
             <p className="text-center text-gray-600 md:mt-0 -mt-8">
-              Below is your MP&apos;s email address and a generated message, consider editing the message to make it unique
+              Below is your MP&apos;s email address and a generated message, consider editing the message to make it unique & more likely to pass spam filters.
             </p>
             <div className="relative p-4 bg-gray-50 rounded-lg">
               <h2 className="font-semibold text-gray-900">{mpDetails.name}</h2>
@@ -112,6 +121,7 @@ export default function EnterPostcode() {
             fullName={fullName}
             address={address}
             postcode={postcode}
+            telephone={telephone}
           />
         </>
       )}
