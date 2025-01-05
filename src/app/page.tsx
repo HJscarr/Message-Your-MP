@@ -4,7 +4,6 @@ import { EnvelopeIcon } from '@heroicons/react/24/outline'
 import EnterPostcode from './components/EnterPostcode'
 import InspiredBy from './components/InspiredBy'
 import { EmailProvider, useEmail } from './components/EmailContents'
-import GradientButton from './components/GradientButton'
 
 function MailtoButton() {
   const { emailBody } = useEmail();
