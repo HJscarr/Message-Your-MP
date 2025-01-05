@@ -8,15 +8,20 @@ import Notification from './Notification'
 const EmailContext = createContext<{
   emailBody: string;
   setEmailBody: (body: string) => void;
+  isEmailReady: boolean;
+  setIsEmailReady: (ready: boolean) => void;
 }>({
   emailBody: '',
   setEmailBody: () => {},
+  isEmailReady: false,
+  setIsEmailReady: () => {},
 });
 
 export const EmailProvider = ({ children }: { children: React.ReactNode }) => {
   const [emailBody, setEmailBody] = useState('');
+  const [isEmailReady, setIsEmailReady] = useState(false);
   return (
-    <EmailContext.Provider value={{ emailBody, setEmailBody }}>
+    <EmailContext.Provider value={{ emailBody, setEmailBody, isEmailReady, setIsEmailReady }}>
       {children}
     </EmailContext.Provider>
   );
@@ -34,8 +39,11 @@ export default function EmailContents({ mpName, constituency, email }: EmailCont
   const [displayedText, setDisplayedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { setEmailBody } = useEmail();
+  const { setEmailBody, setIsEmailReady } = useEmail();
   const [showNotification, setShowNotification] = useState(false);
+
+  // Extract first name from full name
+  const firstName = mpName.split(' ')[0];
 
   // Auto-scroll effect
   useEffect(() => {
@@ -44,16 +52,19 @@ export default function EmailContents({ mpName, constituency, email }: EmailCont
     }
   }, [displayedText]);
 
-  const emailTemplate = `Dear ${mpName},
+  const emailTemplate = `Dear ${firstName},
 
-I would like to enquire what your plans to deal with the exploding wealth inequality of our constituency ${constituency} are.
+I would like to enquire as to what your plans are to deal with the exploding wealth inequality in the UK.
 
-Over COVID-19 pandemic the average billionaires wealth doubled and in the UK saw an increase of 29 billionaires.
+The richest 1% of Britons hold more wealth than 70 per cent of Britons, while the four richest Britons have more wealth than 20 million Britons.
 
-House prices are soaring and the middle and lower classes are being forced to sell their assets to the super wealth that are growing at an *increasing* rate.
+How can we grow our economy when no one has any money to buy goods and services?
 
-Kind regards,
-[Your name]`;
+Asset prices are soaring due to the wealth explosion of the rich and as I'm sure you are aware there is growing unrest across the UK. This is shown by the uprising of far-right activists.
+
+As the MP of ${constituency}, I feel it is your duty to raise this point in parliament.
+
+I eagerly await your response.`;
 
   useEffect(() => {
     let currentIndex = 0;
@@ -65,12 +76,16 @@ Kind regards,
         currentIndex++;
       } else {
         setIsTypingComplete(true);
+        setIsEmailReady(true);
         clearInterval(typingInterval);
       }
     }, 5);
 
-    return () => clearInterval(typingInterval);
-  }, [emailTemplate, setEmailBody, email]);
+    return () => {
+      clearInterval(typingInterval);
+      setIsEmailReady(false);
+    };
+  }, [emailTemplate, setEmailBody, email, setIsEmailReady]);
 
   const handleCopy = async () => {
     try {
@@ -95,7 +110,7 @@ Kind regards,
           ref={textareaRef}
           value={isTypingComplete ? displayedText : displayedText + '|'}
           onChange={handleTextChange}
-          className="w-full h-64 p-4 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+          className="w-full h-96 lg:h-72 p-4 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
           disabled={!isTypingComplete}
         />
         <button
