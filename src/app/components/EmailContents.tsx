@@ -37,6 +37,7 @@ interface EmailContentsProps {
   address: string;
   postcode: string;
   telephone: string;
+  subject: string;
 }
 
 export default function EmailContents({ 
@@ -46,7 +47,8 @@ export default function EmailContents({
   fullName,
   address,
   postcode,
-  telephone 
+  telephone,
+  subject,
 }: EmailContentsProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -69,7 +71,7 @@ export default function EmailContents({
 
   const emailTemplate = `Dear ${mpName},
 
-I would like to enquire as to what your plans are to deal with the exploding wealth inequality in the UK.
+How do you plan to deal with the exploding wealth inequality in the UK?
 
 The richest 1% of Britons hold more wealth than 70 per cent of Britons, while the four richest Britons have more wealth than 20 million Britons.
 
@@ -93,7 +95,7 @@ Tel: ${telephone}`;
       if (currentIndex <= emailTemplate.length) {
         const newText = emailTemplate.slice(0, currentIndex);
         setDisplayedText(newText);
-        setEmailBody(JSON.stringify({ email, body: newText }));
+        setEmailBody(JSON.stringify({ email, body: newText, subject }));
         currentIndex++;
       } else {
         setIsTypingComplete(true);
@@ -106,7 +108,7 @@ Tel: ${telephone}`;
       clearInterval(typingInterval);
       setIsEmailReady(false);
     };
-  }, [emailTemplate, setEmailBody, email, setIsEmailReady]);
+  }, [emailTemplate, setEmailBody, email, setIsEmailReady, subject]);
 
   const handleCopy = async () => {
     try {
@@ -121,7 +123,7 @@ Tel: ${telephone}`;
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDisplayedText(e.target.value);
-    setEmailBody(JSON.stringify({ email, body: e.target.value }));
+    setEmailBody(JSON.stringify({ email, body: e.target.value, subject }));
   };
 
   return (

@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 function MailtoButton() {
   const { emailBody, isEmailReady } = useEmail();
-  const { email, body } = JSON.parse(emailBody || '{"email":null,"body":""}');
+  const { email, body, subject } = JSON.parse(emailBody || '{"email":null,"body":"","subject":""}');
   
   const handleRefresh = () => {
     window.location.reload();
@@ -15,8 +15,8 @@ function MailtoButton() {
 
   // Only include the email in the mailto link if it exists
   const mailtoLink = email 
-    ? `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent('How are you going to deal with Wealth Inequality?')}&body=${encodeURIComponent(body)}`
-    : `mailto:?subject=${encodeURIComponent('How are you going to deal with Wealth Inequality?')}&body=${encodeURIComponent(body)}`;
+    ? `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   // Only render if email is ready
   if (!isEmailReady) return null;

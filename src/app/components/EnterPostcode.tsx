@@ -16,6 +16,8 @@ export default function EnterPostcode() {
   const [address, setAddress] = useState('');
   const [telephone, setTelephone] = useState('');
   const [showNotification, setShowNotification] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('How are you going to deal with Wealth Inequality?');
+  const [copyType, setCopyType] = useState<'email' | 'subject'>('email');
 
   // UK postcode regex pattern
   const postcodePattern = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
@@ -25,6 +27,7 @@ export default function EnterPostcode() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isValidForm) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       getMPDetails(postcode);
     }
   };
@@ -33,11 +36,23 @@ export default function EnterPostcode() {
     if (mpDetails?.email) {
       try {
         await navigator.clipboard.writeText(mpDetails.email);
+        setCopyType('email');
         setShowNotification(true);
         setTimeout(() => setShowNotification(false), 3000);
       } catch (err) {
         console.error('Failed to copy email:', err);
       }
+    }
+  };
+
+  const handleCopySubject = async () => {
+    try {
+      await navigator.clipboard.writeText(emailSubject);
+      setCopyType('subject');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+    } catch (err) {
+      console.error('Failed to copy subject:', err);
     }
   };
 
@@ -95,13 +110,34 @@ export default function EnterPostcode() {
         </div>
       ) : (
         <>
-          <div className="max-w-sm mx-auto space-y-6">
-            <p className="text-center text-gray-600 md:mt-0 -mt-8">
-              Below is your MP&apos;s email address and a generated message, consider editing the message to make it unique & more likely to pass spam filters.
+          <div className="max-w-lg mx-auto space-y-6">
+            <p className="text-center text-gray-600 md:mt-0 -mt-8 text-base">
+              Please <span className="font-bold">edit/personalise the subject and message</span> below to make it unique & more likely to pass spam filters.
             </p>
-            <div className="relative p-4 bg-gray-50 rounded-lg">
+            <div className="relative p-4 bg-gray-50 rounded-lg space-y-3">
               <h2 className="font-semibold text-gray-900">{mpDetails.name}</h2>
-              <p className="mt-1 text-sm text-gray-600">Email: {mpDetails.email || 'Not available'}</p>
+              <p className="mt-1 text-sm text-gray-600">
+                <span className="font-medium">Email:</span> {mpDetails.email || 'Not available'}
+              </p>
+              <div className="relative pr-8">
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium">Subject:</span>
+                </p>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  className="w-full text-sm text-gray-600 bg-transparent border-b border-gray-300 focus:border-indigo-600 focus:outline-none pb-1 mt-1"
+                  placeholder="Email subject..."
+                />
+                <button
+                  onClick={handleCopySubject}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-indigo-600 transition-colors"
+                  title="Copy subject"
+                >
+                  <ClipboardDocumentIcon className="h-5 w-5" />
+                </button>
+              </div>
               {mpDetails.email && (
                 <button
                   onClick={handleCopyEmail}
@@ -122,6 +158,7 @@ export default function EnterPostcode() {
             address={address}
             postcode={postcode}
             telephone={telephone}
+            subject={emailSubject}
           />
         </>
       )}
@@ -133,7 +170,10 @@ export default function EnterPostcode() {
       <Notification 
         show={showNotification}
         setShow={setShowNotification}
-        message="MP's email address copied to clipboard"
+        message={copyType === 'email' 
+          ? "MP's email address copied to clipboard" 
+          : "Email subject copied to clipboard"
+        }
       />
     </div>
   );
