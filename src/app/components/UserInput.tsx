@@ -25,14 +25,14 @@ export default function UserInput({
       <div className="flex justify-center items-center">
         <label htmlFor={id} className="text-sm/6 font-medium text-gray-900 flex items-center">
           {label}
-          <div className="ml-1 inline-flex items-center">
+          <div className="ml-1 inline-flex items-center relative">
             <InformationCircleIcon 
               className="h-4 w-4 text-gray-500 hover:text-indigo-600 cursor-help"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             />
             {showTooltip && (
-              <div className="absolute mt-1 ml-4 w-64 p-2 bg-gray-700 text-white text-xs rounded-md shadow-lg z-10 pointer-events-none">
+              <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-64 p-2 bg-gray-700 text-white text-xs rounded-md shadow-lg z-10 pointer-events-none">
                 Required by your MP to prove you are human, we do not store any of your data
               </div>
             )}
