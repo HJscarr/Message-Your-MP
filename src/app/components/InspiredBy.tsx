@@ -15,7 +15,15 @@ export default function InspiredBy() {
         </a>
       </p>
       <p className="text-sm text-gray-500">
-        The below data is required by your MP to prove you are human, we do not store any of your data
+        The data below is required by your MP to prove you are human. Proof that we do not store any of your data can be found{" "}
+        <a
+          href="https://github.com/HJscarr/Message-Your-MP"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-indigo-600 hover:text-indigo-800 underline font-medium transition-colors duration-200"
+        >
+          here
+        </a>
       </p>
     </div>
   );
