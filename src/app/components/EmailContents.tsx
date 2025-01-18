@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
-import Notification from './Notification'
+import { useState, useEffect, useRef, createContext, useContext, useMemo } from "react";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
+import Notification from "./Notification";
+import { emailTemplates } from "./emailTemplates";
 
 // Create a context for the email body
 const EmailContext = createContext<{
@@ -11,17 +12,19 @@ const EmailContext = createContext<{
   isEmailReady: boolean;
   setIsEmailReady: (ready: boolean) => void;
 }>({
-  emailBody: '',
+  emailBody: "",
   setEmailBody: () => {},
   isEmailReady: false,
   setIsEmailReady: () => {},
 });
 
 export const EmailProvider = ({ children }: { children: React.ReactNode }) => {
-  const [emailBody, setEmailBody] = useState('');
+  const [emailBody, setEmailBody] = useState("");
   const [isEmailReady, setIsEmailReady] = useState(false);
   return (
-    <EmailContext.Provider value={{ emailBody, setEmailBody, isEmailReady, setIsEmailReady }}>
+    <EmailContext.Provider
+      value={{ emailBody, setEmailBody, isEmailReady, setIsEmailReady }}
+    >
       {children}
     </EmailContext.Provider>
   );
@@ -40,27 +43,34 @@ interface EmailContentsProps {
   subject: string;
 }
 
-export default function EmailContents({ 
-  mpName, 
-  constituency, 
-  email, 
+export default function EmailContents({
+  mpName,
+  constituency,
+  email,
   fullName,
   address,
   postcode,
   telephone,
   subject,
 }: EmailContentsProps) {
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState("");
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setEmailBody, setIsEmailReady } = useEmail();
   const [showNotification, setShowNotification] = useState(false);
 
-  // Format postcode to ensure correct spacing and capitalization
-  const formatPostcode = (postcode: string) => {
-    const cleaned = postcode.replace(/\s+/g, '').toUpperCase();
-    return `${cleaned.slice(0, -3)} ${cleaned.slice(-3)}`;
-  };
+  // Select a random template on component mount
+  const emailTemplate = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * emailTemplates.length);
+    return emailTemplates[randomIndex]({
+      mpName,
+      constituency,
+      fullName,
+      address,
+      postcode,
+      telephone,
+    });
+  }, [mpName, constituency, fullName, address, postcode, telephone]);
 
   // Auto-scroll effect
   useEffect(() => {
@@ -68,26 +78,6 @@ export default function EmailContents({
       textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
     }
   }, [displayedText]);
-
-  const emailTemplate = `Dear ${mpName},
-
-How do you plan to deal with the exploding wealth inequality in the UK?
-
-The richest 1% of Britons hold more wealth than 70 per cent of Britons, while the four richest Britons have more wealth than 20 million Britons.
-
-How can we grow our economy when no one has any money to buy goods and services?
-
-Asset prices are soaring due to the wealth explosion of the rich and as I'm sure you are aware there is growing unrest across the UK. This is shown by the uprising of far-right activists.
-
-As the MP of ${constituency}, I feel it is your duty to raise this point in parliament.
-
-I eagerly await your response.
-
-Kind regards,
-${fullName}
-
-Address: ${address} ${formatPostcode(postcode)}
-Tel: ${telephone}`;
 
   useEffect(() => {
     let currentIndex = 0;
@@ -112,12 +102,12 @@ Tel: ${telephone}`;
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(textareaRef.current?.value || '');
+      await navigator.clipboard.writeText(textareaRef.current?.value || "");
       setShowNotification(true);
       // Auto-hide notification after 3 seconds
       setTimeout(() => setShowNotification(false), 3000);
     } catch (err) {
-      console.error('Failed to copy text:', err);
+      console.error("Failed to copy text:", err);
     }
   };
 
@@ -131,7 +121,7 @@ Tel: ${telephone}`;
       <div className="relative mt-6 bg-white rounded-lg shadow-sm border border-gray-200 max-w-4xl mx-auto">
         <textarea
           ref={textareaRef}
-          value={isTypingComplete ? displayedText : displayedText + '|'}
+          value={isTypingComplete ? displayedText : displayedText + "|"}
           onChange={handleTextChange}
           className="w-full h-96 lg:h-72 p-4 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
           disabled={!isTypingComplete}
@@ -144,11 +134,11 @@ Tel: ${telephone}`;
           <ClipboardDocumentIcon className="h-5 w-5" />
         </button>
       </div>
-      <Notification 
+      <Notification
         show={showNotification}
         setShow={setShowNotification}
         message="The message has been copied to your clipboard"
       />
     </>
   );
-} 
+}

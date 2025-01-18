@@ -8,6 +8,7 @@ import Notification from './Notification';
 import GradientButton from './GradientButton';
 import InspiredBy from './InspiredBy';
 import UserInput from './UserInput';
+import { emailSubjects } from './emailTemplates';
 
 export default function EnterPostcode() {
   const { loading, error, mpDetails, getMPDetails } = useMPDetails();
@@ -16,7 +17,10 @@ export default function EnterPostcode() {
   const [address, setAddress] = useState('');
   const [telephone, setTelephone] = useState('');
   const [showNotification, setShowNotification] = useState(false);
-  const [emailSubject, setEmailSubject] = useState('How are you going to deal with Wealth Inequality?');
+  const [emailSubject, setEmailSubject] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * emailSubjects.length);
+    return emailSubjects[randomIndex];
+  });
   const [copyType, setCopyType] = useState<'email' | 'subject'>('email');
 
   // UK postcode regex pattern
