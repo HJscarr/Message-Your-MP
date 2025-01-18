@@ -1,68 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
+# Message Your MP About Wealth Inequality
 
-## Getting Started
+A web application that helps UK citizens contact their MPs about the growing wealth inequality crisis. Built with Next.js and deployed on Cloudflare Pages.
 
-First, run the development server:
+## 🔒 Privacy First
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This application is designed with privacy in mind:
+- **No Data Storage**: We do not store any personal information. All data (name, address, etc.) is only used to generate the email and is never saved or transmitted to any server.
+- **Direct Communication**: The application simply helps format your message - all communication happens directly between you and your MP.
+- **Open Source**: This code is public so anyone can verify how their data is handled.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-## Cloudflare integration
+- Find your MP using your postcode
+- Automatically generate personalized emails using real statistics about wealth inequality
+- Multiple email templates to choose from
+- Real-time email preview with typing animation
+- Copy functionality for easy sending
+- Mobile responsive design
 
-Besides the `dev` script mentioned above `c3` has added a few extra scripts that allow you to integrate the application with the [Cloudflare Pages](https://pages.cloudflare.com/) environment, these are:
-  - `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
-  - `preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
-  - `deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+## 💻 Tech Stack
 
-> __Note:__ while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/main/internal-packages/next-dev/README.md#recommended-development-workflow))
+- [Next.js 15](https://nextjs.org/)
+- [React 19](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Cloudflare Pages](https://pages.cloudflare.com/)
+- [UK Parliament API](https://members-api.parliament.uk/index.html)
 
-### Bindings
+## 📝 License
 
-Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings/) are what allows you to interact with resources available in the Cloudflare Platform.
+This project is open source and available under the MIT License.
 
-You can use bindings during development, when previewing locally your application and of course in the deployed application:
+## 🙏 Acknowledgments
 
-- To use bindings in dev mode you need to define them in the `next.config.js` file under `setupDevBindings`, this mode uses the `next-dev` `@cloudflare/next-on-pages` submodule. For more details see its [documentation](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md).
+Inspired by (but not affiliated with) Gary's Economics YouTube channel.
 
-- To use bindings in the preview mode you need to add them to the `pages:preview` script accordingly to the `wrangler pages dev` command. For more details see its [documentation](https://developers.cloudflare.com/workers/wrangler/commands/#dev-1) or the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+## ⚠️ Disclaimer
 
-- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the  [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+This is an independent project created to facilitate democratic engagement. It is not affiliated with any political party, organization, or the UK Parliament. All statistics used in the email templates are from publicly available sources.
 
-#### KV Example
+## 🤝 Contributing
 
-`c3` has added for you an example showing how you can use a KV binding.
-
-In order to enable the example:
-- Search for javascript/typescript lines containing the following comment:
-  ```ts
-  // KV Example:
-  ```
-  and uncomment the commented lines below it (also uncomment the relevant imports).
-- Do the same in the `wrangler.toml` file, where
-  the comment is:
-  ```
-  # KV Example:
-  ```
-- If you're using TypeScript run the `cf-typegen` script to update the `env.d.ts` file:
-  ```bash
-  npm run cf-typegen
-  # or
-  yarn cf-typegen
-  # or
-  pnpm cf-typegen
-  # or
-  bun cf-typegen
-  ```
-
-After doing this you can run the `dev` or `preview` script and visit the `/api/hello` route to see the example in action.
-
-Finally, if you also want to see the example work in the deployed application make sure to add a `MY_KV_NAMESPACE` binding to your Pages application in its [dashboard kv bindings settings section](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/functions#kv_namespace_bindings_section). After having configured it make sure to re-deploy your application.
+Contributions are welcome! Please feel free to submit a Pull Request.
