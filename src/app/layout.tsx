@@ -13,8 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Message your MP",
-  description: "Message your MP about the cost of living crisis",
+  title: "Message Your MP About Wealth Inequality | UK Parliament Contact Tool",
+  description: "Easy-to-use tool helping UK citizens contact their Members of Parliament about wealth inequality. Find your MP by postcode and send a personalized email.",
+  keywords: "message mp, contact mp, wealth inequality uk, mp email tool, parliament contact",
+  openGraph: {
+    title: "Message Your MP About Wealth Inequality",
+    description: "Easy-to-use tool helping UK citizens contact their Members of Parliament about wealth inequality.",
+    type: "website",
+    url: "https://messageyourmp.com/", // Replace with your actual domain
+  },
+  robots: "index, follow",
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
