@@ -1,0 +1,32 @@
+name: Deploy App to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Setup
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      # Build and deploy the web app
+      - name: Install dependencies
+        run: pnpm install          
+      - name: Build web app
+        run: pnpm pages:build
+      - name: Deploy web app
+        uses: cloudflare/wrangler-action@v3
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_ACCOUNT_EMAIL }}
+        with:
+          command: pages deploy --branch main 

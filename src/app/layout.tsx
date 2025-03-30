@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://messageyourmp.com/", // Replace with your actual domain
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Message Your MP About Wealth Inequality',
+    description: 'Easy-to-use tool helping UK citizens contact their Members of Parliament about wealth inequality.',
+    creator: '@yourtwitterhandle', // Optional: Add your Twitter handle
+  },
   robots: "index, follow",
   viewport: "width=device-width, initial-scale=1",
 };
